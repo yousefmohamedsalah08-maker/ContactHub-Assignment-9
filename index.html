@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ContactHub - a smart contact manager with search, favorites, emergency contacts, and local storage.">
+  <title>ContactHub - Smart Contact Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav-wrap">
+      <a class="brand" href="#" aria-label="ContactHub home">
+        <span class="brand-icon"><i class="fa-solid fa-address-book"></i></span>
+        <span><strong>Contact<span>Hub</span></strong><small>Smart Contact Manager</small></span>
+      </a>
+
+      <div class="nav-actions">
+        <button class="btn-primary" id="addContactBtn" type="button"><i class="fa-solid fa-plus"></i> Add Contact</button>
+        <button class="icon-btn" type="button" aria-label="Notifications"><i class="fa-solid fa-bell"></i></button>
+        <button class="icon-btn" type="button" aria-label="Settings"><i class="fa-solid fa-gear"></i></button>
+        <div class="profile" aria-label="User profile">
+          <img src="./assets/profile.jpeg" alt="User profile">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container main-content">
+    <section class="stats-grid" aria-label="Contact statistics">
+      <article class="stat-card">
+        <span class="stat-icon blue"><i class="fa-solid fa-users"></i></span>
+        <div><small>TOTAL</small><strong id="totalCount">0</strong></div>
+      </article>
+      <article class="stat-card">
+        <span class="stat-icon amber"><i class="fa-solid fa-star"></i></span>
+        <div><small>FAVORITES</small><strong id="favoriteCount">0</strong></div>
+      </article>
+      <article class="stat-card">
+        <span class="stat-icon pink"><i class="fa-solid fa-heart-pulse"></i></span>
+        <div><small>EMERGENCY</small><strong id="emergencyCount">0</strong></div>
+      </article>
+    </section>
+
+    <div class="dashboard-grid">
+      <section class="contacts-area">
+        <div class="section-heading">
+          <h1>All Contacts</h1>
+          <p id="contactsSubtitle">Manage and organize your 0 contacts</p>
+        </div>
+
+        <label class="search-box" for="searchInput">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input id="searchInput" type="search" placeholder="Search by name, phone, or email..." autocomplete="off">
+        </label>
+
+        <div class="contacts-grid" id="contactsGrid"></div>
+      </section>
+
+      <aside class="side-column">
+        <section class="side-card favorites-card">
+          <header>
+            <span class="side-icon amber"><i class="fa-solid fa-star"></i></span>
+            <div><h2>Favorites</h2><p>Quick access to starred contacts</p></div>
+          </header>
+          <div class="side-list" id="favoritesList"></div>
+        </section>
+
+        <section class="side-card emergency-card">
+          <header>
+            <span class="side-icon pink"><i class="fa-solid fa-heart-pulse"></i></span>
+            <div><h2>Emergency</h2><p>Important contacts for urgent calls</p></div>
+          </header>
+          <div class="side-list" id="emergencyList"></div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <div class="modal" id="contactModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h2 id="modalTitle">Add New Contact</h2>
+        <button class="close-btn" id="closeModalBtn" type="button" aria-label="Close modal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="contactForm" novalidate>
+        <div class="photo-picker">
+          <div class="photo-preview" id="photoPreview"><i class="fa-solid fa-user"></i></div>
+          <label class="photo-button" for="contactPhoto"><i class="fa-solid fa-camera"></i> Change Photo</label>
+          <input id="contactPhoto" type="file" accept="image/*" hidden>
+        </div>
+
+        <div class="form-group">
+          <label for="contactName">Full Name <span>*</span></label>
+          <input id="contactName" type="text" placeholder="Enter full name" autocomplete="name">
+          <small class="error-message"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="contactPhone">Phone Number <span>*</span></label>
+          <input id="contactPhone" type="tel" placeholder="e.g., 01012345678" autocomplete="tel">
+          <small class="error-message"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="contactEmail">Email Address</label>
+          <input id="contactEmail" type="email" placeholder="name@example.com" autocomplete="email">
+          <small class="error-message"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="contactAddress">Address</label>
+          <input id="contactAddress" type="text" placeholder="Enter address" autocomplete="street-address">
+        </div>
+
+        <div class="form-group">
+          <label for="contactGroup">Group</label>
+          <select id="contactGroup">
+            <option value="">Select a group</option>
+            <option>Family</option><option>Friends</option><option>Work</option><option>School</option><option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="contactNotes">Notes</label>
+          <textarea id="contactNotes" rows="3" placeholder="Add notes about this contact"></textarea>
+        </div>
+
+        <div class="toggle-row">
+          <label><input id="contactFavorite" type="checkbox"><span><i class="fa-solid fa-star"></i></span> Favorite</label>
+          <label><input id="contactEmergency" type="checkbox"><span><i class="fa-solid fa-heart-pulse"></i></span> Emergency</label>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-secondary" id="cancelModalBtn" type="button">Cancel</button>
+          <button class="btn-primary save-btn" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Contact</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="./main.js"></script>
+</body>
+</html>
